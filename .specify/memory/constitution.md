@@ -1,25 +1,21 @@
 <!--
 Sync Impact Report
-Versão: (template não preenchido) → 1.0.0
-Tipo de mudança: MAJOR — ratificação inicial; todos os placeholders substituídos.
+Versão: 1.0.0 → 1.1.0
+Tipo de mudança: MINOR — expansão material de restrição existente; nenhum princípio
+removido ou redefinido.
 
-Princípios definidos:
-- [PRINCIPLE_1] → I. Privacidade Primeiro (NÃO-NEGOCIÁVEL)
-- [PRINCIPLE_2] → II. Funciona Offline, Sempre
-- [PRINCIPLE_3] → III. Todo Requisito Tem Critério de Aceite
-- [PRINCIPLE_4] → IV. Escopo de MVP
-- [PRINCIPLE_5] → V. Português do Brasil como Padrão
+Princípios modificados: nenhum. Os cinco princípios permanecem inalterados.
 
-Seções adicionadas:
-- [SECTION_2_NAME] → Restrições de Produto e Tecnologia
-- [SECTION_3_NAME] → Fluxo de Desenvolvimento
-- Governance → regras de emenda, versionamento e conformidade
+Seções modificadas:
+- Restrições de Produto e Tecnologia — o modelo de uso deixa de ser coletivo e passa a
+  ser individual por membro, com seletor de membro, visão consolidada da família e
+  ressalva explícita de que o seletor não é limite de segurança.
 
+Seções adicionadas: nenhuma.
 Seções removidas: nenhuma.
 
 Itens diferidos:
-- Stack tecnológica deliberadamente não fixada nesta constituição; pertence ao
-  /speckit-plan. Não é um TODO pendente, é uma decisão de escopo.
+- Stack tecnológica continua deliberadamente não fixada; pertence ao /speckit-plan.
 -->
 
 # Constituição do meubolsoapp
@@ -91,8 +87,17 @@ demonstrável, não cobertura de funcionalidades.
 ## Restrições de Produto e Tecnologia
 
 - Aplicação web com funcionamento offline-first no navegador.
-- Uso familiar em dispositivo compartilhado. NÃO há autenticação no MVP: todos os
-  membros veem todos os lançamentos. Cada lançamento DEVE identificar a quem pertence.
+- Uso familiar em dispositivo compartilhado. NÃO há autenticação no MVP.
+- O controle é individual por membro da família, não coletivo. Cada lançamento DEVE
+  identificar a qual membro pertence.
+- A lista de membros DEVE ser gerenciável dentro do app: adicionar, renomear e remover.
+- Ao abrir, o app DEVE perguntar qual membro está usando. A seleção NÃO é lembrada entre
+  sessões.
+- A visão padrão é filtrada pelo membro selecionado. O usuário PODE trocar de membro a
+  qualquer momento e ver os lançamentos de outro, sem restrição.
+- DEVE existir uma visão consolidada da família, somando todos os membros.
+- O seletor de membro é um filtro de visualização, NÃO um limite de segurança nem de
+  privacidade entre membros. Nenhuma funcionalidade pode assumir que ele protege dados.
 - NÃO há backend próprio no MVP. A persistência é local ao navegador.
 - Valores monetários DEVEM ser armazenados como inteiros em centavos. Ponto flutuante
   para dinheiro é proibido.
@@ -122,4 +127,4 @@ demonstrável, não cobertura de funcionalidades.
 - A conformidade DEVE ser revisada a cada `plan.md` gerado. Violação sem justificativa
   escrita e aprovada bloqueia o avanço para a fase de tarefas.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-04 | **Last Amended**: 2026-09-04
+**Version**: 1.1.0 | **Ratified**: 2026-09-04 | **Last Amended**: 2026-09-04
