@@ -1,18 +1,28 @@
 <!--
 Sync Impact Report
-Versão: 1.0.0 → 1.1.0
-Tipo de mudança: MINOR — expansão material de restrição existente; nenhum princípio
-removido ou redefinido.
+Versão: 1.1.0 → 2.0.0
+Tipo de mudança: MAJOR — duas redefinições incompatíveis: o modelo de uso deixa de ser
+por membro da família e passa a ser estritamente individual; a entrada de dados deixa de
+ter o parser de texto livre como caminho padrão e passa a ser por formulário estruturado.
+O parser local determinístico é removido do escopo.
 
-Princípios modificados: nenhum. Os cinco princípios permanecem inalterados.
+Princípios modificados:
+- I. Privacidade Primeiro — justificativa deixa de citar a família; cláusulas de
+  consentimento mantidas (aplicam-se à entrada opcional por IA).
+- II. Funciona Offline, Sempre — caminho padrão de entrada passa de "parser local
+  determinístico" para "formulário estruturado"; parser removido.
+- V. Português do Brasil como Padrão — removida a cláusula sobre expressões pt-BR do
+  parser; mantidos interface e formatos de exibição.
 
 Seções modificadas:
-- Restrições de Produto e Tecnologia — o modelo de uso deixa de ser coletivo e passa a
-  ser individual por membro, com seletor de membro, visão consolidada da família e
-  ressalva explícita de que o seletor não é limite de segurança.
+- Restrições de Produto e Tecnologia — removido todo o modelo de membros (seletor,
+  lista gerenciável, visão consolidada). Adicionadas regras de uso individual sem
+  identificação e de entrada por controles com formato controlado.
+- Fluxo de Desenvolvimento — a entrada por IA passa a ser implementada após o formulário
+  estruturado (antes: após entrada manual e parser local).
 
 Seções adicionadas: nenhuma.
-Seções removidas: nenhuma.
+Seções removidas: nenhuma (apenas conteúdo dentro de seções existentes).
 
 Itens diferidos:
 - Stack tecnológica continua deliberadamente não fixada; pertence ao /speckit-plan.
@@ -20,8 +30,8 @@ Itens diferidos:
 
 # Constituição do meubolsoapp
 
-Aplicação web de controle de fluxo financeiro pessoal, usada pelos membros de uma
-mesma família para registrar receitas e despesas.
+Aplicação web de controle de fluxo financeiro pessoal, de uso individual, para registrar
+receitas e despesas.
 
 ## Core Principles
 
@@ -37,21 +47,21 @@ mesma família para registrar receitas e despesas.
 - Sem consentimento ativo, o aplicativo NÃO PODE emitir nenhuma requisição de rede
   contendo dado do usuário.
 - Quando o consentimento está ativo, apenas o trecho de texto que o usuário acabou de
-  digitar pode ser enviado. Histórico, saldo, lista de lançamentos e identificação de
-  pessoas NUNCA podem ser incluídos.
+  digitar pode ser enviado. Histórico, saldo e lista de lançamentos NUNCA podem ser
+  incluídos.
 - Recusar ou revogar o consentimento NUNCA bloqueia funcionalidade essencial.
 
-Justificativa: o app lida com o gasto doméstico de uma família inteira. Limitar o que sai
-do dispositivo a uma única frase digitada mantém a exposição verificável em revisão de
-código, em vez de depender de confiança em serviço de terceiro.
+Justificativa: o app lida com o gasto pessoal do usuário. Limitar o que sai do dispositivo
+a uma única frase digitada mantém a exposição verificável em revisão de código, em vez de
+depender de confiança em serviço de terceiro.
 
 ### II. Funciona Offline, Sempre
 
 - Toda funcionalidade essencial — registrar, editar, excluir, listar e consultar
   receitas e despesas, e ver o saldo — DEVE funcionar sem rede.
 - Nenhuma funcionalidade essencial pode depender de IA.
-- A interpretação de texto livre TEM como caminho padrão um parser local determinístico,
-  executado no dispositivo. A IA é alternativa opcional, jamais pré-requisito.
+- O caminho padrão de entrada de dados é o formulário estruturado, executado inteiramente
+  no dispositivo. A IA é alternativa opcional, jamais pré-requisito.
 - Dado do usuário NUNCA pode ser perdido silenciosamente. A falha de um recurso opcional
   DEVE ser visível na interface e oferecer o caminho manual equivalente.
 
@@ -81,23 +91,16 @@ demonstrável, não cobertura de funcionalidades.
 - Toda a interface DEVE estar em português do Brasil.
 - Valores monetários são exibidos no formato `R$ 1.234,56` e datas no formato
   `dd/mm/aaaa`.
-- O parser de texto livre assume expressões de pt-BR, incluindo referências relativas
-  de tempo ("ontem", "hoje") e formatos de valor ("250 reais", "R$ 250,00", "250,50").
 
 ## Restrições de Produto e Tecnologia
 
 - Aplicação web com funcionamento offline-first no navegador.
-- Uso familiar em dispositivo compartilhado. NÃO há autenticação no MVP.
-- O controle é individual por membro da família, não coletivo. Cada lançamento DEVE
-  identificar a qual membro pertence.
-- A lista de membros DEVE ser gerenciável dentro do app: adicionar, renomear e remover.
-- Ao abrir, o app DEVE perguntar qual membro está usando. A seleção NÃO é lembrada entre
-  sessões.
-- A visão padrão é filtrada pelo membro selecionado. O usuário PODE trocar de membro a
-  qualquer momento e ver os lançamentos de outro, sem restrição.
-- DEVE existir uma visão consolidada da família, somando todos os membros.
-- O seletor de membro é um filtro de visualização, NÃO um limite de segurança nem de
-  privacidade entre membros. Nenhuma funcionalidade pode assumir que ele protege dados.
+- Uso estritamente individual. O app assume que quem o abre está no próprio navegador.
+  NÃO há autenticação, identificação de usuário, perfis, membros ou qualquer
+  compartilhamento de dados entre pessoas no MVP.
+- A entrada de dados é por formulário estruturado: o usuário seleciona opções (botões,
+  listas) e digita apenas em campos com formato controlado (valor, data, descrição
+  curta). NÃO existe campo de texto livre interpretado pelo app.
 - NÃO há backend próprio no MVP. A persistência é local ao navegador.
 - Valores monetários DEVEM ser armazenados como inteiros em centavos. Ponto flutuante
   para dinheiro é proibido.
@@ -113,7 +116,7 @@ demonstrável, não cobertura de funcionalidades.
 - O `plan.md` DEVE verificar explicitamente a conformidade com esta constituição antes
   de a fase de tarefas começar.
 - A entrada de dados por IA é a última funcionalidade do MVP a ser implementada, depois
-  de a entrada manual e o parser local estarem funcionando e validados.
+  de o formulário estruturado estar funcionando e validado.
 
 ## Governance
 
@@ -127,4 +130,4 @@ demonstrável, não cobertura de funcionalidades.
 - A conformidade DEVE ser revisada a cada `plan.md` gerado. Violação sem justificativa
   escrita e aprovada bloqueia o avanço para a fase de tarefas.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-04 | **Last Amended**: 2026-09-04
+**Version**: 2.0.0 | **Ratified**: 2026-09-04 | **Last Amended**: 2026-09-10
